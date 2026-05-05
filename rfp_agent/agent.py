@@ -25,6 +25,7 @@ from google.genai import types
 
 from .sub_agents.research_agent import research_agent
 from .sub_agents.generate_rfp_agent import generate_rfp_agent
+from .sub_agents.ppt_agent import ppt_agent
 
 model_name = os.environ.get("MODEL_NAME")
 
@@ -45,10 +46,13 @@ root_agent = Agent(
     3. Display the research findings returned by the 'research_agent' tool verbatim to the user in your response.
     4. Call the 'generate_rfp_agent' tool immediately. Do not apologize, do not ask for copy-pasting, and do not attempt to read or process any uploaded files yourself; always delegate the file reading and RFP generation completely to 'generate_rfp_agent'.
     5. Display the generated RFP response document verbatim to the user.
+    6. Immediately call the 'ppt_agent' tool, passing the generated RFP response document, to generate a professional PowerPoint presentation deck based on it.
+    7. Display the success message of the PowerPoint deck generation, along with the local file path where the user can find and open it.
     """,
     tools=[
         AgentTool(research_agent),
         AgentTool(generate_rfp_agent),
+        AgentTool(ppt_agent),
     ],
 )
 

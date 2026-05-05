@@ -7,8 +7,8 @@ load_dotenv()
 
 model_name = os.environ.get("MODEL_NAME")
 
-from google.adk.tools.google_search_tool import GoogleSearchTool
 from google.adk.tools.vertex_ai_search_tool import VertexAiSearchTool
+from .google_research.agent import google_research_tool
 
 project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 raw_store_id = os.environ.get("RFP_DATA_STORE_ID", os.environ.get("DATA_STORE_ID", "gale-rfp-responses_1777917533429"))
@@ -34,7 +34,7 @@ research_agent = Agent(
             max_results=3,
             bypass_multi_tools_limit=True,
         ),
-        GoogleSearchTool(bypass_multi_tools_limit=True),
+        google_research_tool,
     ],
     output_key="research_results",
 )

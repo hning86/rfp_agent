@@ -29,7 +29,7 @@ generate_rfp_agent = Agent(
     description="Generates an RFP response.",
     instruction=generate_rfp_instruction,
     tools=[
-        load_artifacts_tool,
+        # load_artifacts_tool,
         VertexAiSearchTool(
             data_store_id=data_store_id,
             max_results=3,

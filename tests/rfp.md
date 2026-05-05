@@ -72,8 +72,9 @@ Please provide a detailed proposal including the following:
 # **8\. Point of Contact**
 
 For questions regarding this RFP, please contact:  
-[Hai Ning](mailto:ninghai@google.com)  
-[101 Main Street](https://www.google.com/maps/place/101+Main+Street/data=!4m2!3m1!19sChIJl3W-baRw44kRYtDOe7QuHF4)
+Joe Smith
+101 Main Street, 
+Cambridge, MA 02142
 
 # **9\. Supplemental Questionnaire**
 

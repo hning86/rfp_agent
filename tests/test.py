@@ -71,12 +71,19 @@ async def run_test_queries(queries: list[str]):
     print("\n--- Test Session Completed ---")
     await runner.close()
 
+def load_rfp_text():
+    with open(os.path.join(os.path.dirname(__file__), "rfp.md"), "r", encoding="utf-8") as f:
+        return f.read()
+
 if __name__ == "__main__":
+    rfp_text = load_rfp_text(),
     # EDIT THIS ARRAY: Predefine your test queries here!
     TEST_INPUTS = [
         "Hello! I need help responding to an RFP.",
-        "The prospect client is 'H&R Block'. Let's research them.",
+        "The prospect client is 'H&R Block'.",
         "Let's generate the RFP response document now.",
+        f"Here is the RFP content:\n\n{rfp_text}",
+        "Looks good. Go ahead and generate the PowerPoint deck."
     ]
     
     asyncio.run(run_test_queries(TEST_INPUTS))

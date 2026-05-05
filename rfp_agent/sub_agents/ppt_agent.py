@@ -125,4 +125,5 @@ ppt_agent = Agent(
     description="Generates a beautiful PowerPoint presentation deck based on the final RFP response.",
     instruction=ppt_instruction,
     tools=[generate_powerpoint_deck],
+    output_key="ppt_agent_output"
 )

@@ -11,8 +11,8 @@ from google.adk.tools.vertex_ai_search_tool import VertexAiSearchTool
 from .google_research.agent import google_research_tool
 
 project = os.environ.get("GOOGLE_CLOUD_PROJECT")
-raw_store_id = os.environ.get("RFP_DATA_STORE_ID", os.environ.get("DATA_STORE_ID", "gale-rfp-responses_1777917533429"))
-location = os.environ.get("DATA_STORE_LOCATION", "global")
+raw_store_id = os.environ.get("RFP_DATA_STORE_ID")
+location = os.environ.get("DATA_STORE_LOCATION")
 
 if "/" in raw_store_id:
     data_store_id = raw_store_id

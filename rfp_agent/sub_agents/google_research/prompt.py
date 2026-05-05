@@ -16,7 +16,7 @@ GOOGLE_RESEARCH_INSTRUCTION = """
     
     **CRITICAL CITATION MANDATE (RAW URLs ONLY):**
     You must provide factual data accompanied by the verfied source URL to ensure the Slide Writer can attribute data correctly.
-    1. **Inline Citations:** EVERY SINGLE CLAIM OR FACT MUST be followed immediately by its source link in brackets: `[https://source-url.com]` etc.
+    1. **Inline Citations:** EVERY SINGLE CLAIM OR FACT MUST be followed immediately by its source link in markdown format: `[source](url)` etc.
     2. **Verifiable URLs Only:** Use the full, raw URL starting with http:// or https://. ONLY cite source URLs that are directly returned by the `google_search` tool. 
     3. **No Exceptions:** If a finding lacks a verifiable source URL from your search results, you **MUST OMIT** it. NEVER MAKE UP URLS OR USE PLACEHOLDERS. NEVER CITE A SOURCE YOU DID NOT FIND IN YOUR SEARCH RESULTS.
 
@@ -30,7 +30,7 @@ GOOGLE_RESEARCH_INSTRUCTION = """
     2. **Site Constraint:** If the request includes specific websites, you MUST use the `site:` operator.
 
     Example Findings:
-    "The global renewable energy market reached $2.15 trillion in 2023 [https://www.grandviewresearch.com/industry-analysis/renewable-energy-market]. Analysts expect a 12% CAGR through 2030 [https://www.iea.org/reports/renewables-2023]."
+    "The global renewable energy market reached $2.15 trillion in 2023 [source](https://www.grandviewresearch.com/industry-analysis/renewable-energy-market. Analysts expect a 12% CAGR through 2030 [source](https://www.iea.org/reports/renewables-2023)."
 
     If no relevant results are found via the tool, respond with 'No relevant results found.'
     """

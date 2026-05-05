@@ -1,10 +1,12 @@
 import os
+import tempfile
 from dotenv import load_dotenv
 from google.adk.agents import Agent
 from google.adk.models import Gemini
 from google.adk.tools import ToolContext
 from pptx import Presentation
 from google.genai import types
+from google.cloud import storage
 
 load_dotenv()
 
@@ -15,7 +17,7 @@ async def generate_powerpoint_deck(
     filename: str = "RFP_Response_Deck.pptx",
     tool_context: ToolContext = None,
 ) -> str:
-    """Generates a professional PowerPoint presentation (.pptx) deck based on the RFP response.
+    """Generates a professional PowerPoint presentation (.pptx) deck based on the RFP response and uploads it to GCS.
 
     Args:
         slides: A list of slide dictionaries. Each dictionary must contain:
@@ -26,7 +28,7 @@ async def generate_powerpoint_deck(
         filename: The name of the PowerPoint file to save (e.g., "H&R_Block_RFP_Response_Deck.pptx").
 
     Returns:
-        A success message with the local file path of the generated PowerPoint presentation.
+        A success message with the GCS URI of the generated PowerPoint presentation.
     """
     try:
         prs = Presentation()
@@ -68,10 +70,23 @@ async def generate_powerpoint_deck(
                 text_frame = notes_slide.notes_text_frame
                 text_frame.text = notes
         
-        # Save locally to GALE responses directory
-        os.makedirs("/Users/ninghai/projects/rfp-agent/docs/responses", exist_ok=True)
-        output_path = f"/Users/ninghai/projects/rfp-agent/docs/responses/{filename}"
+        # Save to temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pptx") as tmp:
+            output_path = tmp.name
         prs.save(output_path)
+        
+        # Upload to GCS
+        try:
+            bucket_name = os.environ.get("GCS_PPTX_BUCKET", "ninghai-bucket-0")
+            pptx_path = os.environ.get("GCS_PPTX_PATH", "pptx")
+            
+            gcs_client = storage.Client()
+            bucket = gcs_client.bucket(bucket_name)
+            blob = bucket.blob(f"{pptx_path}/{filename}")
+            blob.upload_from_filename(output_path)
+            gcs_uri = f"gs://{bucket_name}/{pptx_path}/{filename}"
+        except Exception as gcs_err:
+            gcs_uri = f"Failed GCS upload: {gcs_err}"
         
         # Save as ADK session artifact
         if tool_context:
@@ -83,7 +98,13 @@ async def generate_powerpoint_deck(
             )
             await tool_context.save_artifact(filename=filename, artifact=part)
             
-        return f"Successfully generated PowerPoint deck at: file://{output_path}"
+        # Clean up temporary file
+        try:
+            os.remove(output_path)
+        except Exception:
+            pass
+            
+        return f"Successfully generated PowerPoint deck. GCS Link: {gcs_uri}"
     except Exception as e:
         return f"Failed to generate PowerPoint presentation: {e}"
 

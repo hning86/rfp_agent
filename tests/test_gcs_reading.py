@@ -1,13 +1,12 @@
 import asyncio
 import sys
 import os
+from dotenv import load_dotenv
 
 # Add project root directory to sys.path to allow importing rfp_agent
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
-
-from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../rfp_agent/.env"))
@@ -18,6 +17,7 @@ from google.adk.artifacts import InMemoryArtifactService
 from google.adk.memory import InMemoryMemoryService
 from google.adk.auth.credential_service.in_memory_credential_service import InMemoryCredentialService
 from google.genai import types
+from google.cloud import storage
 
 # Import the root agent from the agent package
 from rfp_agent.agent import root_agent
@@ -36,7 +36,7 @@ async def run_test_queries():
     app_name = "rfp_agent"
     session = await session_service.create_session(app_name=app_name, user_id=user_id)
     
-    # 1. Write some mock RFP content to a text file and upload it as an artifact
+    # Stage mock RFP content to GCS first
     rfp_content = """
     REQUEST FOR PROPOSAL (RFP)
     Client: H&R Block
@@ -47,16 +47,16 @@ async def run_test_queries():
     - Leverage data-driven insights to optimize campaign performance.
     """
     
-    part = types.Part.from_text(text=rfp_content)
-    
-    # Save the artifact to the artifact service
-    await artifact_service.save_artifact(
-        app_name=app_name,
-        user_id=user_id,
-        session_id=session.id,
-        filename="rfp_document.txt",
-        artifact=part
-    )
+    gcs_uri = "gs://ninghai-bucket-0/rfps/test_rfp.txt"
+    print(f"Staging mock RFP to {gcs_uri}...")
+    try:
+        storage_client = storage.Client()
+        bucket = storage_client.bucket("ninghai-bucket-0")
+        blob = bucket.blob("rfps/test_rfp.txt")
+        blob.upload_from_string(rfp_content)
+        print("Staging complete!")
+    except Exception as err:
+        print(f"Warning: Failed to stage test RFP to GCS: {err}. Real GCS file must exist.")
     
     # Initialize the Runner
     runner = Runner(
@@ -68,12 +68,12 @@ async def run_test_queries():
         credential_service=credential_service,
     )
     
-    print(f"--- Starting Agent Test Session with Uploaded RFP (ID: {session.id}) ---")
+    print(f"--- Starting Agent Test Session with GCS RFP (ID: {session.id}) ---")
     
     queries = [
         "Hello! I need help responding to an RFP.",
         "The client is 'H&R Block'. Let's research them.",
-        "Let's generate the RFP response document now. I have uploaded the RFP document as rfp_document.txt.",
+        f"Let's generate the RFP response document now. The RFP is located at {gcs_uri}.",
     ]
     
     for query in queries:

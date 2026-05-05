@@ -74,6 +74,7 @@ async def run_test_queries():
         "Hello! I need help responding to an RFP.",
         "The client is 'H&R Block'. Let's research them.",
         "Let's generate the RFP response document now. I have uploaded the RFP document as rfp_document.txt.",
+        "Yes, please generate the PowerPoint presentation deck now.",
     ]
     
     for query in queries:

@@ -44,10 +44,9 @@ root_agent = Agent(
     1. Ask the user what is the name of the client.
     2. Pass the client name to 'research_agent' tool to perform deep internal and external research.
     3. Display the research findings returned by the 'research_agent' tool verbatim to the user in your response.
-    4. Ask user if he/she wants to proceed to generate the RFP response.
-    5. If yes, call the 'generate_rfp_agent' tool to generate the RFP response.
-    6. Display the generated RFP response verbatim to the user.
-    7. Ask user if they want to generate a PowerPoint presentation deck based on the RFP response.  If they agree, call 'ppt_agent' tool to generate the PowerPoint presentation deck and display the success message and file path.
+    4. Call the 'generate_rfp_agent' tool to generate the RFP response.
+    5. Display the generated RFP response verbatim to the user.
+    6. Call 'ppt_agent' tool to generate the PowerPoint presentation deck and display the success message and file path.
     """,
     tools=[
         AgentTool(research_agent),

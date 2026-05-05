@@ -1,5 +1,7 @@
 import os
 import tempfile
+import random
+import string
 from dotenv import load_dotenv
 from google.adk.agents import Agent
 from google.adk.models import Gemini
@@ -31,6 +33,10 @@ async def generate_powerpoint_deck(
         A success message with the GCS URI of the generated PowerPoint presentation.
     """
     try:
+        base, ext = os.path.splitext(filename)
+        postfix = "".join(random.choices(string.ascii_lowercase + string.digits, k=4))
+        unique_filename = f"{base}_{postfix}{ext}"
+        
         prs = Presentation()
         
         # 1. Title/Cover Slide
@@ -82,9 +88,9 @@ async def generate_powerpoint_deck(
             
             gcs_client = storage.Client()
             bucket = gcs_client.bucket(bucket_name)
-            blob = bucket.blob(f"{pptx_path}/{filename}")
+            blob = bucket.blob(f"{pptx_path}/{unique_filename}")
             blob.upload_from_filename(output_path)
-            gcs_uri = f"gs://{bucket_name}/{pptx_path}/{filename}"
+            gcs_uri = f"gs://{bucket_name}/{pptx_path}/{unique_filename}"
         except Exception as gcs_err:
             gcs_uri = f"Failed GCS upload: {gcs_err}"
         
@@ -96,7 +102,7 @@ async def generate_powerpoint_deck(
                 data=pptx_bytes,
                 mime_type="application/vnd.openxmlformats-officedocument.presentationml.presentation"
             )
-            await tool_context.save_artifact(filename=filename, artifact=part)
+            await tool_context.save_artifact(filename=unique_filename, artifact=part)
             
         # Clean up temporary file
         try:

@@ -73,13 +73,10 @@ root_agent = Agent(
     3. Display the research findings returned by the 'research_agent' tool verbatim to the user in your response.
     4. Call the 'generate_rfp_agent' tool to generate the RFP response.
     5. Display the generated RFP response verbatim to the user.
-    6. Call 'ppt_agent' tool to generate the PowerPoint presentation deck and display the success message and file path.
-    7. Also display the slide-by-slide outline returned by the 'generate_rfp_agent' tool in the response.
     """,
     tools=[
         AgentTool(research_agent),
         AgentTool(generate_rfp_agent),
-        AgentTool(ppt_agent),
     ],
 )
 

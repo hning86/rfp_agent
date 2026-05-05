@@ -1,3 +1,4 @@
 pypdf>=6.10.2
 python-pptx>=1.0.2
 google-cloud-storage
+matplotlib>=3.8.0

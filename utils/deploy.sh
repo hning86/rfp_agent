@@ -17,7 +17,8 @@ fi
 # Fallback defaults if not set in .env
 PROJECT="${GOOGLE_CLOUD_PROJECT:-ninghai-ccai}"
 REGION="${GOOGLE_CLOUD_LOCATION:-us-central1}"
-AGENT_ENGINE_ID="3375681566935089152"
+AGENT_ENGINE_ID="2853791775741444096"
+#AGENT_ENGINE_ID="3375681566935089152"
 
 echo "Deploying rfp_agent to Vertex AI Agent Engine..."
 echo "Project: $PROJECT"

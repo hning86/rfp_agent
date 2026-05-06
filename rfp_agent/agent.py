@@ -24,8 +24,9 @@ from google.adk.models import Gemini
 from google.genai import types
 
 from .sub_agents.research_agent import research_agent
-from .sub_agents.generate_rfp_agent import generate_rfp_agent
+from .sub_agents.generate_rfp_agent import generate_rfp_agent, read_gcs_rfp_document
 from .sub_agents.ppt_agent import ppt_agent
+from google.adk.tools.load_artifacts_tool import load_artifacts_tool
 
 model_name = os.environ.get("MODEL_NAME")
 
@@ -71,12 +72,15 @@ root_agent = Agent(
     1. Ask the user what is the name of the client.
     2. Pass the client name to 'research_agent' tool to perform deep internal and external research.
     3. Display the research findings returned by the 'research_agent' tool verbatim to the user in your response.
-    4. Call the 'generate_rfp_agent' tool to generate the RFP response.
-    5. Display the generated RFP response verbatim to the user.
+    4. Ask the user to upload the RFP PDF file or provide a GCS URI. Check if the RFP document has been uploaded as a PDF attachment in the session artifacts. If it has, use the `load_artifacts_tool` to read and extract the content. If the user provides a GCS URI, call `read_gcs_rfp_document` to download and parse the content.
+    5. Once you have extracted the RFP content, call the 'generate_rfp_agent' tool to generate the RFP response, passing the extracted RFP content to it.
+    6. Display the generated RFP response verbatim to the user.
     """,
     tools=[
         AgentTool(research_agent),
         AgentTool(generate_rfp_agent),
+        load_artifacts_tool,
+        read_gcs_rfp_document,
     ],
 )
 

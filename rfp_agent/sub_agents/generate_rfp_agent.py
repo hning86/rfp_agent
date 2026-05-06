@@ -17,12 +17,20 @@ from google.adk.tools.load_artifacts_tool import load_artifacts_tool
 
 project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 location = os.environ.get("DATA_STORE_LOCATION", "global")
-raw_store_id = os.environ.get("INTERNAL_DOCS_DATA_STORE_ID")
 
+# Datastore 1: GALE Internal Documents
+raw_store_id = os.environ.get("INTERNAL_DOCS_DATA_STORE_ID")
 if "/" in raw_store_id:
     data_store_id = raw_store_id
 else:
     data_store_id = f"projects/{project}/locations/{location}/collections/default_collection/dataStores/{raw_store_id}"
+
+# Datastore 2: Past RFP Responses (used by research_engine)
+rfp_raw_store_id = os.environ.get("RFP_DATA_STORE_ID")
+if "/" in rfp_raw_store_id:
+    rfp_store_id = rfp_raw_store_id
+else:
+    rfp_store_id = f"projects/{project}/locations/{location}/collections/default_collection/dataStores/{rfp_raw_store_id}"
 
 def read_gcs_document(gcs_uri: str) -> str:
     """
@@ -74,6 +82,22 @@ PROMPT_PATH = os.path.join(os.path.dirname(__file__), "../prompts/generate_rfp_a
 with open(PROMPT_PATH, "r", encoding="utf-8") as f:
     generate_rfp_instruction = f.read()
 
+internal_docs_search = VertexAiSearchTool(
+    data_store_id=data_store_id,
+    max_results=3,
+    bypass_multi_tools_limit=True,
+)
+internal_docs_search.name = "search_internal_knowledge"
+internal_docs_search.description = "Search GALE's internal knowledge base, including templates, case studies, past proposals, and methodologies."
+
+rfp_responses_search = VertexAiSearchTool(
+    data_store_id=rfp_store_id,
+    max_results=3,
+    bypass_multi_tools_limit=True,
+)
+rfp_responses_search.name = "search_past_rfps"
+rfp_responses_search.description = "Search past client RFP responses and research profiles for parallel client experiences and methodologies."
+
 generate_rfp_agent = Agent(
     name="generate_rfp_agent",
     model=Gemini(
@@ -83,13 +107,8 @@ generate_rfp_agent = Agent(
     description="Generates an RFP response.",
     instruction=generate_rfp_instruction,
     tools=[
-        load_artifacts_tool,
-        read_gcs_rfp_document,
-        VertexAiSearchTool(
-            data_store_id=data_store_id,
-            max_results=3,
-            bypass_multi_tools_limit=True,
-        )
+        internal_docs_search,
+        rfp_responses_search,
     ],
     output_key="rfp_response"
 )

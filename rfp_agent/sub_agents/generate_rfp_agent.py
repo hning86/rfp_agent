@@ -12,6 +12,7 @@ from google.cloud import storage
 from pypdf import PdfReader
 from google.adk.tools import FunctionTool
 from google.adk.tools.vertex_ai_search_tool import VertexAiSearchTool
+from google.adk.tools.load_artifacts_tool import load_artifacts_tool
 
 project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 location = os.environ.get("DATA_STORE_LOCATION", "global")
@@ -78,6 +79,7 @@ generate_rfp_agent = Agent(
     description="Generates an RFP response.",
     instruction=generate_rfp_instruction,
     tools=[
+        load_artifacts_tool,
         read_gcs_rfp_document,
         VertexAiSearchTool(
             data_store_id=data_store_id,

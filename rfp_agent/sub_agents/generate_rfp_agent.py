@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from google.adk.agents import Agent
 from google.adk.models import Gemini
+from google.genai import types
 
 load_dotenv()
 
@@ -75,7 +76,10 @@ with open(PROMPT_PATH, "r", encoding="utf-8") as f:
 
 generate_rfp_agent = Agent(
     name="generate_rfp_agent",
-    model=Gemini(model=model_name),
+    model=Gemini(
+        model=model_name,
+        retry_options=types.HttpRetryOptions(attempts=3),
+    ),
     description="Generates an RFP response.",
     instruction=generate_rfp_instruction,
     tools=[

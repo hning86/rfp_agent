@@ -17,6 +17,7 @@
 from typing import Any
 
 from google.adk.agents import LlmAgent
+from google.adk.models import Gemini
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.adk.tools import FunctionTool, google_search
@@ -27,7 +28,10 @@ from .prompt import GOOGLE_RESEARCH_INSTRUCTION
 
 # 1. Define the core specialist agent
 research_agent = LlmAgent(
-    model=ROOT_MODEL,
+    model=Gemini(
+        model=ROOT_MODEL,
+        retry_options=types.HttpRetryOptions(attempts=3),
+    ),
     name="research_specialist",
     description="Gather high-impact facts and statistics using Google Search.",
     instruction=GOOGLE_RESEARCH_INSTRUCTION,

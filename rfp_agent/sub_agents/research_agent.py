@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from google.adk.agents import Agent
 from google.adk.models import Gemini
+from google.genai import types
 
 load_dotenv()
 
@@ -25,7 +26,10 @@ with open(PROMPT_PATH, "r", encoding="utf-8") as f:
 
 research_agent = Agent(
     name="research_agent",
-    model=Gemini(model=model_name),
+    model=Gemini(
+        model=model_name,
+        retry_options=types.HttpRetryOptions(attempts=3),
+    ),
     description="Performs internal and external research on a prospect client.",
     instruction=research_instruction,
     tools=[

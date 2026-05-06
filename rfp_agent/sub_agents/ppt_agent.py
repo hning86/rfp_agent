@@ -121,7 +121,10 @@ with open(PROMPT_PATH, "r", encoding="utf-8") as f:
 
 ppt_agent = Agent(
     name="ppt_agent",
-    model=Gemini(model=model_name),
+    model=Gemini(
+        model=model_name,
+        retry_options=types.HttpRetryOptions(attempts=3),
+    ),
     description="Generates a beautiful PowerPoint presentation deck based on the final RFP response.",
     instruction=ppt_instruction,
     tools=[generate_powerpoint_deck],

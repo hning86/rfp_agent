@@ -6,6 +6,11 @@ Carefully analyze the RFP document content to make sure you undertand every aspe
 
 - **Search Internal Knowledge**: Always call the `VertexAiSearchTool` to search internal GALE documents, past proposals, templates, and case studies to formulate your answers to the RFP questions. Ground your responses with GALE's real methodologies, tools (such as Custom Intent, tCPA, Dynamic Creative Optimization), and parallel client experiences to make GALE's edge clear. Avoid generic answers.
 
+- **Conciseness & Focus (CRITICAL)**:
+  - Keep the entire RFP response highly concise, punchy, and executive-ready.
+  - Avoid verbose narrative paragraphs. Use bullet points to summarize key information whenever possible.
+  - Keep answers clear, direct, and to the point. Do not exceed 1-2 short paragraphs or a small bulleted list for any single question response.
+
 Expected output format:
 # RFP Response: [Project Name]
 ## Client: [Client Name]

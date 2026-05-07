@@ -14,6 +14,7 @@ from pypdf import PdfReader
 from google.adk.tools import FunctionTool
 from google.adk.tools.vertex_ai_search_tool import VertexAiSearchTool
 from google.adk.tools.load_artifacts_tool import load_artifacts_tool
+from google.adk.tools.agent_tool import AgentTool
 
 project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 location = os.environ.get("DATA_STORE_LOCATION", "global")
@@ -82,21 +83,22 @@ PROMPT_PATH = os.path.join(os.path.dirname(__file__), "../prompts/generate_rfp_a
 with open(PROMPT_PATH, "r", encoding="utf-8") as f:
     generate_rfp_instruction = f.read()
 
-internal_docs_search = VertexAiSearchTool(
-    data_store_id=data_store_id,
-    max_results=3,
-    bypass_multi_tools_limit=True,
+rfp_knowledge_search_agent = Agent(
+    name="rfp_knowledge_search_agent",
+    model=Gemini(
+        model=model_name,
+        retry_options=types.HttpRetryOptions(attempts=3),
+    ),
+    description="Search GALE's past client RFP responses and research profiles to find parallel client campaigns and vertical methodologies.",
+    instruction="You are a search assistant. Search the past RFP responses data store to answer the user's query exactly and accurately.",
+    tools=[
+        VertexAiSearchTool(
+            data_store_id=rfp_store_id,
+            max_results=3,
+            bypass_multi_tools_limit=True,
+        )
+    ],
 )
-internal_docs_search.name = "search_internal_knowledge"
-internal_docs_search.description = "Search GALE's internal knowledge base, including templates, case studies, past proposals, and methodologies."
-
-rfp_responses_search = VertexAiSearchTool(
-    data_store_id=rfp_store_id,
-    max_results=3,
-    bypass_multi_tools_limit=True,
-)
-rfp_responses_search.name = "search_past_rfps"
-rfp_responses_search.description = "Search past client RFP responses and research profiles for parallel client experiences and methodologies."
 
 generate_rfp_agent = Agent(
     name="generate_rfp_agent",
@@ -107,8 +109,12 @@ generate_rfp_agent = Agent(
     description="Generates an RFP response.",
     instruction=generate_rfp_instruction,
     tools=[
-        internal_docs_search,
-        rfp_responses_search,
+        VertexAiSearchTool(
+            data_store_id=data_store_id,
+            max_results=3,
+            bypass_multi_tools_limit=True,
+        ),
+        AgentTool(rfp_knowledge_search_agent),
     ],
     output_key="rfp_response"
 )

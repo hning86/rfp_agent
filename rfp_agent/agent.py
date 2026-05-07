@@ -25,7 +25,6 @@ from google.genai import types
 
 from .sub_agents.research_agent import research_agent
 from .sub_agents.generate_rfp_agent import generate_rfp_agent, read_gcs_rfp_document
-from .sub_agents.ppt_agent import ppt_agent
 from google.adk.tools.load_artifacts_tool import load_artifacts_tool
 
 model_name = os.environ.get("MODEL_NAME")

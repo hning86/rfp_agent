@@ -30,6 +30,11 @@ research_agent = Agent(
         model=model_name,
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
+    generate_content_config=types.GenerateContentConfig(
+        thinking_config=types.ThinkingConfig(
+            include_thoughts=True
+        )
+    ),
     description="Performs internal and external research on a prospect client.",
     instruction=research_instruction,
     tools=[

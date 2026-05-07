@@ -32,6 +32,11 @@ research_agent = LlmAgent(
         model=ROOT_MODEL,
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
+    generate_content_config=types.GenerateContentConfig(
+        thinking_config=types.ThinkingConfig(
+            include_thoughts=True
+        )
+    ),
     name="research_specialist",
     description="Gather high-impact facts and statistics using Google Search.",
     instruction=GOOGLE_RESEARCH_INSTRUCTION,

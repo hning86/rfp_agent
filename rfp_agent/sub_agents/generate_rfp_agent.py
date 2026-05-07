@@ -89,6 +89,11 @@ rfp_knowledge_search_agent = Agent(
         model=model_name,
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
+    generate_content_config=types.GenerateContentConfig(
+        thinking_config=types.ThinkingConfig(
+            include_thoughts=True
+        )
+    ),
     description="Search GALE's past client RFP responses and research profiles to find parallel client campaigns and vertical methodologies.",
     instruction="You are a search assistant. Search the past RFP responses data store to answer the user's query exactly and accurately.",
     tools=[
@@ -105,6 +110,11 @@ generate_rfp_agent = Agent(
     model=Gemini(
         model=model_name,
         retry_options=types.HttpRetryOptions(attempts=3),
+    ),
+    generate_content_config=types.GenerateContentConfig(
+        thinking_config=types.ThinkingConfig(
+            include_thoughts=True
+        )
     ),
     description="Generates an RFP response.",
     instruction=generate_rfp_instruction,

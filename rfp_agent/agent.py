@@ -60,6 +60,11 @@ root_agent = Agent(
         model=model_name,
         retry_options=types.HttpRetryOptions(attempts=3),
     ),
+    generate_content_config=types.GenerateContentConfig(
+        thinking_config=types.ThinkingConfig(
+            include_thoughts=True
+        )
+    ),
     description="Orchestrates the RFP response process sequentially.",
     instruction=f"""
     You are the Lead RFP Response Agent. Your goal is to guide the user through the RFP process.

@@ -30,7 +30,7 @@ from .prompt import GOOGLE_RESEARCH_INSTRUCTION
 research_agent = LlmAgent(
     model=Gemini(
         model=ROOT_MODEL,
-        retry_options=types.HttpRetryOptions(attempts=3),
+        retry_options=types.HttpRetryOptions(attempts=6),
     ),
     generate_content_config=types.GenerateContentConfig(
         thinking_config=types.ThinkingConfig(

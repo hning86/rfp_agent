@@ -28,7 +28,7 @@ research_agent = Agent(
     name="research_agent",
     model=Gemini(
         model=model_name,
-        retry_options=types.HttpRetryOptions(attempts=3),
+        retry_options=types.HttpRetryOptions(attempts=6),
     ),
     generate_content_config=types.GenerateContentConfig(
         thinking_config=types.ThinkingConfig(

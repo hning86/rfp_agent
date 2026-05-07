@@ -87,7 +87,11 @@ rfp_knowledge_search_agent = Agent(
     name="rfp_knowledge_search_agent",
     model=Gemini(
         model=model_name,
-        retry_options=types.HttpRetryOptions(attempts=6),
+        retry_options=types.HttpRetryOptions(
+            attempts=6,
+            initial_delay=2.0,
+            max_delay=60.0,
+        ),
     ),
     generate_content_config=types.GenerateContentConfig(
         thinking_config=types.ThinkingConfig(
@@ -109,7 +113,11 @@ generate_rfp_agent = Agent(
     name="generate_rfp_agent",
     model=Gemini(
         model=model_name,
-        retry_options=types.HttpRetryOptions(attempts=6),
+        retry_options=types.HttpRetryOptions(
+            attempts=6,
+            initial_delay=2.0,
+            max_delay=60.0,
+        ),
     ),
     generate_content_config=types.GenerateContentConfig(
         thinking_config=types.ThinkingConfig(

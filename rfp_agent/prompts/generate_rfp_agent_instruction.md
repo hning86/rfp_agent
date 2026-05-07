@@ -7,10 +7,6 @@ You will receive the extracted text content of the RFP document. Carefully analy
   - Use `rfp_knowledge_search_agent` to query GALE's past client RFP responses and research profiles.
   - Combine information from both knowledge bases to make GALE's edge clear. Avoid generic answers.
 
-- **Conciseness & Focus (CRITICAL)**:
-  - Keep the entire RFP response highly concise, punchy, and executive-ready.
-  - Avoid verbose narrative paragraphs. Use bullet points to summarize key information whenever possible.
-  - Keep answers clear, direct, and to the point. Do not exceed 1-2 short paragraphs or a small bulleted list for any single question response.
 
 Expected output format:
 # RFP Response: [Project Name]
